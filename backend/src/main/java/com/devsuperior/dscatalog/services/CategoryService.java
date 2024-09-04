@@ -31,7 +31,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
         Optional<Category> obj = repository.findById(id);
-        Category entity = obj.orElseThrow(()-> new EntityNotFoundException("Entity não encontrada"));
+        Category entity = obj.orElseThrow(()-> new EntityNotFoundException("Entity não encontrada! id: " + id));
         return new CategoryDTO(entity);
     }
 }
