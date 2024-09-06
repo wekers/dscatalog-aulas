@@ -38,6 +38,7 @@ public class Category {
         updatedAt = Instant.now();
     }
 
+
     /* *** fim audit *** */
 
     public Category() {
