@@ -2,6 +2,7 @@ package com.devsuperior.dscatalog.resources;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.services.ProductService;
+import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscatalog.tests.Factory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +40,7 @@ class ProductResourceTest {
     private ProductService service;
     private Long existingId;
     private Long nonExistingId;
+    private Long dependentId;
     private ProductDTO productDTO;
     private PageImpl<ProductDTO> page;
 
@@ -47,6 +49,7 @@ class ProductResourceTest {
 
         existingId = 1L;
         nonExistingId = 2L;
+        dependentId = 3L;
 
         productDTO = Factory.createProductDTO();
         page = new PageImpl<>(List.of(productDTO));
@@ -58,6 +61,10 @@ class ProductResourceTest {
 
         Mockito.when(service.update(eq(existingId), any())).thenReturn(productDTO);
         Mockito.when(service.update(eq(nonExistingId), any())).thenThrow(ResourceNotFoundException.class);
+
+        Mockito.doNothing().when(service).delete(existingId);
+        Mockito.doThrow(ResourceNotFoundException.class).when(service).delete(nonExistingId);
+        Mockito.doThrow(DatabaseException.class).when(service).delete(dependentId);
 
     }
 
